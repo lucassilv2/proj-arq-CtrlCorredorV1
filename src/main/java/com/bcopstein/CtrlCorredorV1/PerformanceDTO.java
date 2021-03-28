@@ -13,17 +13,23 @@ import java.util.List;
  * @author 55519
  */
 class PerformanceDTO {
-    String Provas;
+
+    public String getProvas() {
+        return Provas;
+    }
+     private String Provas;
+     
      private EventoRepository eR;
     
-    public PerformanceDTO(int distancia, int ano){
-       int s = 0;
-       int h = 0;
-       int m = 0;
-       int s1 = 0;
-       int h1 = 0;
-       int m1 = 0;
-       int menor = Integer.MIN_VALUE; 
+    public PerformanceDTO(int distancia, int ano ,EventoRepository eR){
+       this.eR = eR;
+       double s = 0;
+       double h = 0;
+       double m = 0;
+       double s1 = 0;
+       double h1 = 0;
+       double m1 = 0;
+       double menor = Double.MIN_VALUE; 
        List<Evento> eventos = this.eR.eventoDistancia2(distancia, ano);
        for(int i= 0; i < eventos.size(); i++){
           if(i+1 < eventos.size()){
@@ -40,10 +46,9 @@ class PerformanceDTO {
             s1 = s/60;
             h1 = h*60;
             m1 = m + h +s;
-            
-            if(m-m1 > menor){
-                menor = m-m1;
-                this.Provas = eventos.get(i).getNome()+" "+ eventos.get(i+1).getNome();
+            if(m1-m > menor){
+                menor = m1-m;
+                this.Provas = eventos.get(i).getNome()+" e "+ eventos.get(i+1).getNome();
             }
           }
        } 

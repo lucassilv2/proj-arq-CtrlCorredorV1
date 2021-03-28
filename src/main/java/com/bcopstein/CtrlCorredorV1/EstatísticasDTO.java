@@ -8,50 +8,72 @@ package com.bcopstein.CtrlCorredorV1;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Collections;
+import org.springframework.beans.factory.annotation.Autowired;
 
 class EstatísticasDTO {
-    double media;
-    double mediana;
-    double desvio_padrao;
+
+    public double getMedia() {
+        return media;
+    }
+
+    public double getMediana() {
+        return mediana;
+    }
+
+    public double getDesvio_padrao() {
+        return desvio_padrao;
+    }
+
+    private double media;
+    private double mediana;
+    private double desvio_padrao;
     private EventoRepository eR;
     
-    public EstatísticasDTO(int distancia){
+    @Autowired
+    public EstatísticasDTO(int distancia,  EventoRepository eR){
+        this.eR = eR;
         List<Evento> eventos = this.eR.eventoDistancia(distancia);
-        int h = 0;
-        int m = 0;
-        int s = 0;
-        List<Integer> list = new ArrayList<Integer>();
+        double h = 0;
+        double m = 0;
+        double s = 0;
+        ArrayList<Double> list = new ArrayList<Double>();
         for (Evento e : eventos) {
             h =+ e.getHoras();
             m =+ e.getMinutos();
             s =+ e.getSegundos();
             addList(list, h,m,s);
         }
-        Arrays.sort(list.toArray());
+        Collections.sort(list);
 
-        double median;
-        if (list.toArray().length % 2 == 0)
-            median = ((double)list.toArray()[list.toArray().length/2] + (double)list.toArray()[list.toArray().length/2 - 1])/2;
-        else
-        this.mediana = (double) list.toArray()[list.toArray().length/2];
+        double middle = list.size()/2;
+        if (list.size()%2 == 0) {
+           middle = (list.get(list.size()/2) + list.get(list.size()/2 - 1))/2;
+        } else {
+            middle = list.get(list.size() / 2);
+        }
+ 
+        this.mediana = middle;
+        
+        
         s = s/60;
         h = h*60;
         m = m + h +s;
         this.media = m / eventos.size();
         this.desvio_padrao = getDesvioPadrao(list);
     }
-    public void addList (List<Integer> a, int h,int m,int s){
+    public void addList (List<Double> a, double h,double m,double s){
         s = s/60;
         h = h*60;
         m = m + h +s;
         a.add(m);
     }
     
-    public Double getDesvioPadrao(List<Integer> valor) {
+    public Double getDesvioPadrao(List<Double> valor) {
         Double media = this.media;
         int tam = valor.size();
         Double desvPadrao = 0D;
-        for (Integer vlr : valor) {
+        for (Double vlr : valor) {
             Double aux = vlr - media;
             desvPadrao += aux * aux;
         }

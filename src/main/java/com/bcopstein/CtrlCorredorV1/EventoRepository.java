@@ -21,9 +21,13 @@ public class EventoRepository {
         this.jdbcTemplate.execute("CREATE TABLE eventos("
                 + "id int, nome VARCHAR(255), dia int, mes int, ano int, distancia int, horas int, minutos int, segundos int,PRIMARY KEY(id))");
         
-        this.jdbcTemplate.batchUpdate(
+        this.jdbcTemplate.update(
                 "INSERT INTO eventos(id,nome,dia,mes,ano,distancia,horas,minutos,segundos) VALUES" +
                 " ('1','Poa Day Run',22,5,2019,5,0,35,32)");
+        this.jdbcTemplate.update(
+                "INSERT INTO eventos(id,nome,dia,mes,ano,distancia,horas,minutos,segundos) VALUES" +
+                " ('2','Poa Day Run2',22,5,2019,5,2,0,32)");
+ 
     }
     
     public List<Evento> todos(){
@@ -42,17 +46,21 @@ public class EventoRepository {
     
     public List<Evento> eventoDistancia(int distancia){
         String sql = ("SELECT * from eventos Where distancia = ?");
-        return (List<Evento>) jdbcTemplate.queryForObject(
+        return (List<Evento>) jdbcTemplate.query(
             sql, 
             new Object[]{distancia}, 
-            new BeanPropertyRowMapper(Evento.class));
+            (rs, rowNum) -> new Evento(rs.getInt("id"), rs.getString("nome"), rs.getInt("dia"), rs.getInt("mes"),
+                        rs.getInt("ano"), rs.getInt("distancia"), rs.getInt("horas"), rs.getInt("minutos"),
+                        rs.getInt("segundos")));
     }
     
     public List<Evento> eventoDistancia2(int distancia,int ano ){
         String sql = ("SELECT * from eventos Where distancia = ? AND ano = ?");
-        return (List<Evento>) jdbcTemplate.queryForObject(
+        return (List<Evento>) jdbcTemplate.query(
             sql, 
             new Object[]{distancia,ano}, 
-            new BeanPropertyRowMapper(Evento.class));
+            (rs, rowNum) -> new Evento(rs.getInt("id"), rs.getString("nome"), rs.getInt("dia"), rs.getInt("mes"),
+                        rs.getInt("ano"), rs.getInt("distancia"), rs.getInt("horas"), rs.getInt("minutos"),
+                        rs.getInt("segundos")));
     }
 }
