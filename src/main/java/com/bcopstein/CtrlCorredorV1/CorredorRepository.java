@@ -3,6 +3,7 @@ package com.bcopstein.CtrlCorredorV1;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,14 @@ public class CorredorRepository {
                 corredor.getCpf(), corredor.getNome(), corredor.getDiaDn(), corredor.getMesDn(), corredor.getAnoDn(),
                 corredor.getGenero());
         return true;
+    }
+    
+    public Corredor buscaCorredor(String cpf){
+       String sql = ("SELECT * from corredores Where cpf = ?");
+       return (Corredor) jdbcTemplate.queryForObject(
+            sql, 
+            new Object[]{cpf}, 
+            new BeanPropertyRowMapper(Corredor.class));
     }
     
     public void removeTodos(){

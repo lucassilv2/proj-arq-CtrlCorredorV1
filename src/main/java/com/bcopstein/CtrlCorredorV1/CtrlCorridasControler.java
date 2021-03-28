@@ -50,12 +50,14 @@ public class CtrlCorridasControler {
     @GetMapping("/estatisticas") 
     @CrossOrigin(origins = "*") 
     public EstatísticasDTO estatisticas(@RequestParam final int distancia){ 
-        return null;
+       EstatísticasDTO estatistica = new EstatísticasDTO(distancia);
+       return estatistica;
     }
     
     @GetMapping("/aumentoPerformance") 
     @CrossOrigin(origins = "*") 
     public PerformanceDTO aumentoPerformance(@RequestParam final int distancia, @RequestParam final int ano){ 
-        return null;
+        PerformanceDTO performance = new PerformanceDTO(distancia,ano);
+        return performance;
     }
 }

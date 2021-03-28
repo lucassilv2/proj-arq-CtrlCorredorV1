@@ -3,6 +3,7 @@ package com.bcopstein.CtrlCorredorV1;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -33,10 +34,25 @@ public class EventoRepository {
         return resp;
     }
     public boolean cadastra(Evento evento){
-        this.jdbcTemplate.update(
-                "INSERT INTO eventos(id,nome,dia,mes,ano,distancia,horas,minutos,segundos) VALUES (?,?,?,?,?,?,?,?,?)",
-                evento.getId(), evento.getNome(), evento.getDia(), evento.getMes(), evento.getAno(),
-                evento.getDistancia(), evento.getHoras(), evento.getMinutos(), evento.getSegundos());
+         this.jdbcTemplate.update("INSERT INTO eventos(id,nome,dia,mes,ano,distancia,horas,minutos,segundos) VALUES (?,?,?,?,?,?,?,?,?)",
+            evento.getId(), evento.getNome(), evento.getDia(), evento.getMes(), evento.getAno(),
+            evento.getDistancia(), evento.getHoras(), evento.getMinutos(), evento.getSegundos());
         return true;
+    }
+    
+    public List<Evento> eventoDistancia(int distancia){
+        String sql = ("SELECT * from eventos Where distancia = ?");
+        return (List<Evento>) jdbcTemplate.queryForObject(
+            sql, 
+            new Object[]{distancia}, 
+            new BeanPropertyRowMapper(Evento.class));
+    }
+    
+    public List<Evento> eventoDistancia2(int distancia,int ano ){
+        String sql = ("SELECT * from eventos Where distancia = ? AND ano = ?");
+        return (List<Evento>) jdbcTemplate.queryForObject(
+            sql, 
+            new Object[]{distancia,ano}, 
+            new BeanPropertyRowMapper(Evento.class));
     }
 }
