@@ -1,4 +1,4 @@
-package com.bcopstein.CtrlCorredorV1;
+package com.bcopstein.ctrlcorredor_v7_CLEAN.negocio.entidades;
 
 public class Evento {
     private int id;
